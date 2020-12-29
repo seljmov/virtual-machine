@@ -8,4 +8,4 @@ add_executable(
         Memory.h Memory.cpp
         Processor.h Processor.cpp
         Types.h Commands/Command.h
-)
+        PSW.h)
