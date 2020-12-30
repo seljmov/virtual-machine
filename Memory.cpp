@@ -20,6 +20,6 @@ data_t Memory::get_data(const address_t &addr) const {
 
 void Memory::verify_address(const address_t &address) const {
     if (address < 0 || address >= SIZE) {
-        throw out_of_memory("Выход за пределы памяти");
+        throw out_of_memory("Выход за пределы памяти!");
     }
 }

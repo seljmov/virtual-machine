@@ -35,4 +35,12 @@ public:
     ~out_of_memory() override = default;
 };
 
+// - Деление на ноль
+class division_by_zero : public exception_with_text
+{
+public:
+    explicit division_by_zero(const std::string &what) : exception_with_text(what) {}
+    ~division_by_zero() override = default;
+};
+
 #endif // EXCEPTIONS_H

@@ -8,4 +8,4 @@ add_executable(
         Memory.h Memory.cpp
         Processor.h Processor.cpp
         Types.h Commands/Command.h
-        PSW.h Exceptions.h)
+        PSW.h Exceptions.h Commands/Conversions.cpp Commands/Conversions.h Commands/IntegerArithmetic.cpp Commands/IntegerArithmetic.h Commands/RealArithmetic.cpp Commands/RealArithmetic.h Commands/Movements.cpp Commands/Movements.h Commands/IO.cpp Commands/IO.h)
