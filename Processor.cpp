@@ -1,7 +1,41 @@
 #include "Processor.h"
+#include "Commands/Movements.h"
+#include "Commands/IntegerArithmetic.h"
+#include "Commands/RealArithmetic.h"
+#include "Commands/Conversions.h"
+#include "Commands/IO.h"
 
 Processor::Processor() {
+    command[stop] = nullptr;
+    command[move] = new class Move();
 
+    command[iAdd] = new class iAdd();
+    command[iSub] = new class iSub();
+    command[iMul] = new class iMul();
+    command[iDiv] = new class iDiv();
+    command[iMod] = new class iMod();
+    command[iInc] = new class iInc();
+    command[iDec] = new class iDec();
+    command[iAnd] = new class iAnd();
+    command[iOr] = new class iOR();
+    command[iNot] = new class iNot();
+
+    command[rAdd] = new class rAdd();
+    command[rSub] = new class rSub();
+    command[rMul] = new class rMul();
+    command[rDiv] = new class rDiv();
+
+    command[input] = new class Input();
+    command[output] = new class Output();
+
+    command[jmp] = new class Jmp();
+    command[jzf] = new class Jzf();
+    command[jnzf] = new class Jnzf();
+    command[jsf] = new class Jsf();
+    command[jnsf] = new class Jnsf();
+
+    command[call] = new class Call();
+    command[ret] = new class Ret();
 }
 
 Processor::~Processor() {
@@ -31,6 +65,8 @@ void Processor::reset() noexcept {
 void Processor::run() noexcept {
     load_curr_cmd();    // - Загрузка первой команды
     while (cmd.code != stop) {
-
+        command[cmd.code]->operator()(*this);
+        psw.inc_IP();
+        load_curr_cmd();
     }
 }

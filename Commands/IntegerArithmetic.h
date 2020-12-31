@@ -84,7 +84,7 @@ class iDec : public IntegerArithmetic
 };
 
 // - Логическое И
-class iLAnd : public IntegerArithmetic
+class iAnd : public IntegerArithmetic
 {
     int execute(int var1, int var2) final {
         return (var1 & var2);
@@ -92,7 +92,7 @@ class iLAnd : public IntegerArithmetic
 };
 
 // - Логическое ИЛИ
-class iLOR : public IntegerArithmetic
+class iOR : public IntegerArithmetic
 {
     int execute(int var1, int var2) final {
         return (var1 | var2);
@@ -100,7 +100,7 @@ class iLOR : public IntegerArithmetic
 };
 
 // - Логическое НЕ
-class iLNot : public IntegerArithmetic
+class iNot : public IntegerArithmetic
 {
     int execute(int var1, int var2) final {
         return (~var1);

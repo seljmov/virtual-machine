@@ -43,4 +43,12 @@ public:
     ~division_by_zero() override = default;
 };
 
+// - Неправильная операция ввода\вывода
+class invalid_io_operation : public exception_with_text
+{
+public:
+    explicit invalid_io_operation(const std::string &what) : exception_with_text(what) {}
+    ~invalid_io_operation() override = default;
+};
+
 #endif // EXCEPTIONS_H

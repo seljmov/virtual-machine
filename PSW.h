@@ -17,6 +17,7 @@ public:
     inline uint8_t get_ZF() const noexcept { return ZF; }
     inline uint8_t get_SF() const noexcept { return SF; }
 
+    inline void inc_IP() noexcept { ++IP; }
     inline void set_IP(uint16_t addr) noexcept { IP = addr; };
     inline void set_ZF(int32_t i) noexcept { ZF = (i == 0); }
     inline void set_SF(int32_t i) noexcept { SF = (i < 0); }
