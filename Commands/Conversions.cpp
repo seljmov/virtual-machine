@@ -10,7 +10,7 @@ void Jmp::go_to(Processor &processor) noexcept {
         case 0: {
             // - Для сокращения выделю индекс сразу
             const uint8_t idx = processor.get_cmd_r1();
-            address = processor.regs[idx].word16->uint16;
+            address = processor.get_uint16(idx);
             break;
         }
             // - dd = 01: адрес = o2
@@ -22,14 +22,14 @@ void Jmp::go_to(Processor &processor) noexcept {
         case 2: {
             // - Для сокращения выделю индекс сразу
             const uint8_t idx = processor.get_cmd_r2();
-            address = processor.regs[idx].word16->uint16;
+            address = processor.get_uint16(idx);
             break;
         }
             // - dd = 11: адрес = r2+o2
         case 3: {
             // - Для сокращения выделю индекс сразу
             const uint8_t idx = processor.get_cmd_r2();
-            address = processor.regs[idx].word16->uint16 + processor.get_cmd_o2();
+            address = processor.get_uint16(idx) + processor.get_cmd_o2();
             break;
         }
     }

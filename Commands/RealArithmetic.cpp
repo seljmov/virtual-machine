@@ -21,12 +21,9 @@ void RealArithmetic::operator()(Processor &processor) {
 void RealArithmetic::set_flags(Processor &processor) noexcept {
     // - Узнаем индекс второго регистра, участвовавшего в команде,
     // - так как результат лежит во втором регистре
-    // - Так как обращение по четным индексам (2, 4, 6, 8),
-    // - а в реале индексы - 0,1,2,3, то мы делим на 2 и вычитаем 1,
-    // - чтобы из нечетного вида прийти к реальному
-    const uint8_t r2_i = processor.get_cmd_r2() / 2 - 1;
+    const uint8_t r2_i = processor.get_cmd_r2();
     // - Узнаем результат
-    int32_t result = processor.regs[r2_i].word32.real32;
+    int32_t result = processor.get_real32(r2_i);
     // - Устанавливаем флаги
     processor.psw.set_ZF(result);
     processor.psw.set_SF(result);
@@ -34,17 +31,17 @@ void RealArithmetic::set_flags(Processor &processor) noexcept {
 
 void RealArithmetic::handle_reg_to_reg(Processor &processor) noexcept {
     // - Узнаем индексы регистров
-    const uint8_t r1_i = processor.get_cmd_r1() / 2 - 1;
-    const uint8_t r2_i = processor.get_cmd_r2() / 2 - 1;
+    const uint8_t r1_i = processor.get_cmd_r1();
+    const uint8_t r2_i = processor.get_cmd_r2();
     // - Вычисляем
-    processor.regs[r2_i].word32.real32 = execute(
-            processor.regs[r1_i].word32.real32, processor.regs[r2_i].word32.real32
-    );
+    float real32 = execute(processor.get_real32(r1_i), processor.get_real32(r2_i));
+    // - Записываем результат
+    processor.set_real32(real32, r2_i);
 }
 
 void RealArithmetic::handle_reg_to_mem(Processor &processor) noexcept {
-// - Узнаем индекс регистра и адрес памяти
-    const uint8_t r1_i = processor.get_cmd_r1() / 2 - 1;
+    // - Узнаем индекс регистра и адрес памяти
+    const uint8_t r1_i = processor.get_cmd_r1();
     const address_t o2_i = processor.get_cmd_o2();
     // - Потому что сохраняем в память
     data_t new_data;
@@ -52,7 +49,7 @@ void RealArithmetic::handle_reg_to_mem(Processor &processor) noexcept {
     data_t from_mem = processor.get_from_mem(o2_i);
     // - Вычисляем
     new_data.word.word32.real32 = execute(
-            processor.regs[r1_i].word32.real32, from_mem.word.word32.real32
+            processor.get_real32(r1_i), from_mem.word.word32.real32
     );
     // - Отправляем результат по адресу
     processor.push_to_mem(new_data, o2_i);
@@ -61,13 +58,13 @@ void RealArithmetic::handle_reg_to_mem(Processor &processor) noexcept {
 void RealArithmetic::handle_mem_to_reg(Processor &processor) noexcept {
     // - Узнаем индекс регистра и адрес памяти
     const address_t o1_i = processor.get_cmd_o1();
-    const uint8_t r2_i = processor.get_cmd_r2() / 2 - 1;
+    const uint8_t r2_i = processor.get_cmd_r2();
     // - Берем требуемые данные из памяти
     data_t from_mem = processor.get_from_mem(o1_i);
     // - Вычисляем
-    processor.regs[r2_i].word32.real32 = execute(
-            from_mem.word.word32.real32, processor.regs[r2_i].word32.real32
-    );
+    float real32 = execute(from_mem.word.word32.real32, processor.get_real32(r2_i));
+    // - Записываем результат
+    processor.set_real32(real32, r2_i);
 }
 
 void RealArithmetic::handle_mem_to_mem(Processor &processor) noexcept {

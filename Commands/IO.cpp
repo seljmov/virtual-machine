@@ -20,34 +20,36 @@ void Input::operator()(Processor &processor) {
     const uint8_t r2_i = processor.get_cmd_r2();
     address_t mode = 0;
     if (dd == 0) {
-        mode = processor.get_cmd_o1();
+        const uint8_t r1_i = processor.get_cmd_r1();
+        mode = processor.get_int16(r1_i);
     } else {
-        mode = processor.get_cmd_r1();
+        const address_t o1_i = processor.get_cmd_o1();
+        mode = processor.get_from_mem(o1_i).word.word16->int16;
     }
 
     switch (mode) {
         case input_int16: {
             int16_t number = 0;
             std::cin >> number;
-            processor.regs[r2_i/2-1].word16[r2_i%2].int16 = number;
+            processor.set_int16(number, r2_i);
             break;
         }
         case input_uint16: {
             uint16_t number = 0;
             std::cin >> number;
-            processor.regs[r2_i/2-1].word16[r2_i%2].uint16 = number;
+            processor.set_uint16(number, r2_i);
             break;
         }
         case input_int32: {
             int32_t number = 0;
             std::cin >> number;
-            processor.regs[r2_i/2-1].word32.int32 = number;
+            processor.set_int32(number, r2_i);
             break;
         }
         case input_real32: {
             float number = 0;
             std::cin >> number;
-            processor.regs[r2_i/2-1].word32.real32 = number;
+            processor.set_real32(number, r2_i);
             break;
         }
     }
@@ -73,7 +75,8 @@ void Output::operator()(Processor &processor) {
     const uint8_t r2_i = processor.get_cmd_r2();
     address_t mode = 0;
     if (dd == 0) {
-        mode = processor.get_cmd_r1();
+        const uint8_t r1_i = processor.get_cmd_r1();
+        mode = processor.get_int16(r1_i);
     } else {
         const address_t o1_i = processor.get_cmd_o1();
         mode = processor.get_from_mem(o1_i).word.word16->int16;
@@ -81,22 +84,22 @@ void Output::operator()(Processor &processor) {
 
     switch (mode) {
         case output_int16: {
-            int16_t number = processor.regs[r2_i].word16->int16;
+            int16_t number = processor.get_int16(r2_i);
             std::cout << "int16: " << number;
             break;
         }
         case output_uint16: {
-            uint16_t number = processor.regs[r2_i/2-1].word16[r2_i%2].uint16;
+            uint16_t number = processor.get_uint16(r2_i);
             std::cout << "uint16: " << number;
             break;
         }
         case output_int32: {
-            int32_t number = processor.regs[r2_i/2-1].word32.int32;
+            int32_t number = processor.get_int32(r2_i);
             std::cout << "int32: " << number;
             break;
         }
         case output_real32: {
-            float number = processor.regs[r2_i/2-1].word32.real32;
+            float number = processor.get_real32(r2_i);
             std::cout << "real32: " << number;
             break;
         }

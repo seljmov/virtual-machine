@@ -29,16 +29,13 @@ void IntegerArithmetic::set_flags(Processor &processor) noexcept {
     if (s == 0)
     {
         // - Узнаем результат
-        result = processor.regs[r2_i/2-1].word16[r2_i%2].int16;
+        result = processor.get_int16(r2_i);
     }
-        // - Иначе размер операнда - 2 слова
+    // - Иначе размер операнда - 2 слова
     else
     {
         // - Узнаем результат
-        // - Так как обращение по четным индексам (2, 4, 6, 8),
-        // - а в реале индексы - 0,1,2,3, то мы делим на 2 и вычитаем 1,
-        // - чтобы из нечетного вида прийти к реальному
-        result = processor.regs[r2_i/2-1].word32.int32;
+        result = processor.get_int32(r2_i);
     }
     // - Устанавливаем флаги
     processor.psw.set_ZF(result);
@@ -54,16 +51,18 @@ void IntegerArithmetic::handle_reg_to_reg(Processor &processor) noexcept {
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
-        processor.regs[r2_i/2-1].word16[r2_i%2].int16 = execute(
-                processor.regs[r1_i/2].word16[r1_i%2].int16, processor.regs[r2_i/2-1].word16[r2_i%2].int16
-        );
+        // - Вычисляем
+        int16_t int16 = execute(processor.get_int16(r1_i), processor.get_int16(r2_i));
+        // - Записываем результат
+        processor.set_int16(int16, r2_i);
     }
     // - Иначе размер операнда - 2 слова
     else
     {
-        processor.regs[r2_i/2-1].word32.int32 = execute(
-                processor.regs[r1_i/2-1].word32.int32, processor.regs[r2_i/2-1].word32.int32
-        );
+        // - Вычисляем
+        int32_t int32 = execute(processor.get_int32(r1_i), processor.get_int32(r2_i));
+        // - Записываем результат
+        processor.set_int32(int32, r2_i);
     }
 }
 
@@ -80,15 +79,17 @@ void IntegerArithmetic::handle_reg_to_mem(Processor &processor) noexcept {
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
+        // - Вычисляем
         new_data.word.word16->int16 = execute(
-                processor.regs[r1_i/2].word16[r1_i%2].int16, from_mem.word.word16->int16
+                processor.get_int16(r1_i), from_mem.word.word16->int16
         );
     }
     // - Иначе размер операнда - 2 слова
     else
     {
+        // - Вычисляем
         new_data.word.word32.int32 = execute(
-                processor.regs[r1_i/2-1].word32.int32, from_mem.word.word32.int32
+                processor.get_int32(r1_i), from_mem.word.word32.int32
         );
     }
     // - Отправляем результат по адресу
@@ -106,16 +107,18 @@ void IntegerArithmetic::handle_mem_to_reg(Processor &processor) noexcept {
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
-        processor.regs[r2_i/2-1].word16[r2_i%2].int16 = execute(
-            from_mem.word.word16->int16, processor.regs[r2_i/2-1].word16[r2_i%2].int16
-        );
+        // - Вычисляем
+        int16_t int16 = execute(from_mem.word.word16->int16, processor.get_int16(r2_i));
+        // - Записываем результат
+        processor.set_int16(int16, r2_i);
     }
     // - Иначе размер операнда - 2 слова
     else
     {
-        processor.regs[r2_i/2-1].word32.int32 = execute(
-                from_mem.word.word32.int32, processor.regs[r2_i/2-1].word32.int32
-        );
+        // - Вычисляем
+        int32_t int32 = execute(from_mem.word.word32.int32, processor.get_int32(r2_i));
+        // - Записываем результат
+        processor.set_int32(int32, r2_i);
     }
 }
 
@@ -133,6 +136,7 @@ void IntegerArithmetic::handle_mem_to_mem(Processor &processor) noexcept {
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
+        // - Вычисляем
         new_data.word.word16->int16 = execute(
                 from_mem_1.word.word16->int16, from_mem_2.word.word16->int16
         );
@@ -140,6 +144,7 @@ void IntegerArithmetic::handle_mem_to_mem(Processor &processor) noexcept {
     // - Иначе размер операнда - 2 слова
     else
     {
+        // - Вычисляем
         new_data.word.word32.int32 = execute(
                 from_mem_1.word.word32.int32, from_mem_2.word.word32.int32
         );
