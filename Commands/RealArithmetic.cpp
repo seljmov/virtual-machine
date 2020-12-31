@@ -26,7 +26,7 @@ void RealArithmetic::set_flags(Processor &processor) noexcept {
     // - чтобы из нечетного вида прийти к реальному
     const uint8_t r2_i = processor.get_cmd_r2() / 2 - 1;
     // - Узнаем результат
-    int32_t result = processor.regs[r2_i].real32;
+    int32_t result = processor.regs[r2_i].word32.real32;
     // - Устанавливаем флаги
     processor.psw.set_ZF(result);
     processor.psw.set_SF(result);
@@ -37,8 +37,8 @@ void RealArithmetic::handle_reg_to_reg(Processor &processor) noexcept {
     const uint8_t r1_i = processor.get_cmd_r1() / 2 - 1;
     const uint8_t r2_i = processor.get_cmd_r2() / 2 - 1;
     // - Вычисляем
-    processor.regs[r2_i].real32 = execute(
-            processor.regs[r1_i].real32, processor.regs[r2_i].real32
+    processor.regs[r2_i].word32.real32 = execute(
+            processor.regs[r1_i].word32.real32, processor.regs[r2_i].word32.real32
     );
 }
 
@@ -51,8 +51,8 @@ void RealArithmetic::handle_reg_to_mem(Processor &processor) noexcept {
     // - Берем требуемые данные из памяти
     data_t from_mem = processor.get_from_mem(o2_i);
     // - Вычисляем
-    new_data.word.real32 = execute(
-            processor.regs[r1_i].real32, from_mem.word.real32
+    new_data.word.word32.real32 = execute(
+            processor.regs[r1_i].word32.real32, from_mem.word.word32.real32
     );
     // - Отправляем результат по адресу
     processor.push_to_mem(new_data, o2_i);
@@ -65,8 +65,8 @@ void RealArithmetic::handle_mem_to_reg(Processor &processor) noexcept {
     // - Берем требуемые данные из памяти
     data_t from_mem = processor.get_from_mem(o1_i);
     // - Вычисляем
-    processor.regs[r2_i].real32 = execute(
-            from_mem.word.real32, processor.regs[r2_i].real32
+    processor.regs[r2_i].word32.real32 = execute(
+            from_mem.word.word32.real32, processor.regs[r2_i].word32.real32
     );
 }
 
@@ -80,8 +80,8 @@ void RealArithmetic::handle_mem_to_mem(Processor &processor) noexcept {
     data_t from_mem_1 = processor.get_from_mem(o1_i);
     data_t from_mem_2 = processor.get_from_mem(o2_i);
     // - Вычисляем
-    new_data.word.real32 = execute(
-            from_mem_1.word.real32, from_mem_2.word.real32
+    new_data.word.word32.real32 = execute(
+            from_mem_1.word.word32.real32, from_mem_2.word.word32.real32
     );
     // - Отправляем результат по адресу
     processor.push_to_mem(new_data, o2_i);
