@@ -56,7 +56,7 @@ class rDiv : public RealArithmetic
         if (var2 == 0) {
             throw division_by_zero("Деление на ноль невозможно!");
         }
-        return (var1 + var2);
+        return (var1 / var2);
     }
 };
 
