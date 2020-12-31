@@ -22,30 +22,17 @@ void Loader::upload(const std::string &filename, Processor &processor) {
 
         switch (symbol)
         {
-            case 'a':
-            {
-                break;
-            }
-
-            case 'i':
-            {
-                break;
-            }
-
-            case 'r':
-            {
-                break;
-            }
-
-            case 'c':
-            {
-                break;
-            }
-
-            case 'e':
-            {
-                break;
-            }
+            // - Указываем IP
+            // - Формат: a <адрес>
+            case 'a': read_address(istring, address); break;
+            // - Формат: i <размер> <число>
+            case 'i': read_integer(istring, processor, address); break;
+            // - Формат: r <число>
+            case 'r': read_real(istring, processor, address); break;
+            // - Формат: c <opcode> <ss> <dd> <операнды>
+            case 'c': read_command(istring, processor, address);
+            // - Формат: e <адрес памяти>
+            case 'e': read_last(istring, processor, address); break;
         }
     }
 
@@ -53,7 +40,7 @@ void Loader::upload(const std::string &filename, Processor &processor) {
     file.close();
 }
 
-bool Loader::is_register(const std::string &str) const noexcept {
+bool Loader::is_register(const std::string &str) noexcept {
     // - Максимальный номер регистра 8, поэтому вид операнда: %%8
     // - Достаточно проверить, что первые два символа = %,
     // - а третий символ = цифра
@@ -64,11 +51,11 @@ bool Loader::is_register(const std::string &str) const noexcept {
     return (prefix && digit);
 }
 
-void Loader::read_address(std::istringstream &strm, address_t &addr) const noexcept {
+void Loader::read_address(std::istringstream &strm, address_t &addr) noexcept {
     strm >> addr;
 }
 
-void Loader::read_integer(std::istringstream &strm, Processor &proc, address_t &addr) const noexcept {
+void Loader::read_integer(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     word_t word;
     uint8_t s;
     strm >> s;
@@ -80,22 +67,22 @@ void Loader::read_integer(std::istringstream &strm, Processor &proc, address_t &
     ++addr;
 }
 
-void Loader::read_real(std::istringstream &strm, Processor &proc, address_t &addr) const noexcept {
+void Loader::read_real(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     word_t word;
     strm >> word.word32.real32;
     proc.push_to_mem({word, }, addr);
     ++addr;
 }
 
-void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &addr) const noexcept {
+void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     cmd_t command;
 
     // - Получаем вектор строк, где каждый элемент = элемент команды
     std::vector<std::string> _cmd = split(strm.str(), ' ');
     // - Удаляем префикс
     _cmd.erase(_cmd.begin());
-    // - Удаляем комментарий, если он есть
-    remove_comment(_cmd);
+    // - Удаляем пробелы и комментарий, если он есть
+    remove_trash(_cmd);
 
     command.code = uint8_t(std::stoi(_cmd[0]));
     command.s = uint8_t(std::stoi(_cmd[1]));
@@ -120,18 +107,18 @@ void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &
     }
 
     // - Второй операнд
-    std::string s_operand = _cmd[3];
+    std::string s_operand = _cmd[4];
     // - Если регистр
     if (is_register(s_operand))
     {
         s_operand = s_operand.substr(2);
-        command.r1 = uint8_t(std::stoi(s_operand));
+        command.r2 = uint8_t(std::stoi(s_operand));
     }
     // - Иначе память
     else
     {
         s_operand = s_operand.substr(1);
-        command.o1 = uint8_t(std::stoi(s_operand));
+        command.o2 = uint8_t(std::stoi(s_operand));
     }
 
     data_t to_mem;
@@ -140,7 +127,7 @@ void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &
     ++addr;
 }
 
-void Loader::read_last(std::istringstream &strm, Processor &proc, address_t &addr) const noexcept {
+void Loader::read_last(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     data_t data;
     data.cmd.code = 0;
     proc.push_to_mem(data, addr);
@@ -149,7 +136,7 @@ void Loader::read_last(std::istringstream &strm, Processor &proc, address_t &add
     proc.psw.set_IP(IP);
 }
 
-std::vector<std::string> Loader::split(const std::string &str, char delim) const {
+std::vector<std::string> Loader::split(const std::string &str, char delim) {
     std::vector<std::string> elems;
     std::stringstream string(str);
     std::string item;
@@ -159,11 +146,25 @@ std::vector<std::string> Loader::split(const std::string &str, char delim) const
     return elems;
 }
 
-void Loader::remove_comment(std::vector<std::string> &cmd) const {
+void Loader::remove_trash(std::vector<std::string> &cmd) {
+    // - Удаление комментария
     for (auto i = cmd.size()-1; i >= 0; --i) {
         if (cmd[i] == ";") {
             cmd.erase(cmd.begin()+i, cmd.end());
             break;
         }
+    }
+
+    // - Удаление пустот
+    std::size_t i = 0;
+    while (i < cmd.size())
+    {
+        if (cmd[i] == "") {
+            cmd.erase(cmd.begin()+i);
+            // - Тут continue, так как следующий за удаленным элемент,
+            // - тоже может быть пустотой, поэтому не увеличиваем счетчик
+            continue;
+        }
+        ++i;
     }
 }

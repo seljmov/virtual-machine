@@ -73,14 +73,15 @@ void Output::operator()(Processor &processor) {
     const uint8_t r2_i = processor.get_cmd_r2();
     address_t mode = 0;
     if (dd == 0) {
-        mode = processor.get_cmd_o1();
-    } else {
         mode = processor.get_cmd_r1();
+    } else {
+        const address_t o1_i = processor.get_cmd_o1();
+        mode = processor.get_from_mem(o1_i).word.word16->int16;
     }
 
     switch (mode) {
         case output_int16: {
-            int16_t number = processor.regs[r2_i/2-1].word16[r2_i%2].int16;
+            int16_t number = processor.regs[r2_i].word16->int16;
             std::cout << "int16: " << number;
             break;
         }
