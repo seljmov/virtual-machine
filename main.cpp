@@ -5,8 +5,11 @@
 
 using namespace std;
 
-string getPath()
+// - Так как я на Linux Pop!_OS,
+// - то мне нужен абсолютный путь к файлу :)
+string get_path()
 {
+    // - Получаю абсолютный путь
     string path = filesystem::current_path();
     // - Так как у меня Cmake, то исполняемый файл находится в папке
     // - cmake-build-debug, поэтому я обрезаю этот каталог из пути
@@ -22,7 +25,7 @@ string getPath()
 int main()
 {
     Processor processor;
-    string filename = getPath() + "/demo/move.txt";
+    string filename = get_path() + "/demo/move.txt";
 
     Loader::upload(filename, processor);
     processor.run();
