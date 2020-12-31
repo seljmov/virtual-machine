@@ -30,24 +30,28 @@ void Input::operator()(Processor &processor) {
     switch (mode) {
         case input_int16: {
             int16_t number = 0;
+            std::cout << "int16: ";
             std::cin >> number;
             processor.set_int16(number, r2_i);
             break;
         }
         case input_uint16: {
             uint16_t number = 0;
+            std::cout << "uint16: ";
             std::cin >> number;
             processor.set_uint16(number, r2_i);
             break;
         }
         case input_int32: {
             int32_t number = 0;
+            std::cout << "int32: ";
             std::cin >> number;
             processor.set_int32(number, r2_i);
             break;
         }
         case input_real32: {
             float number = 0;
+            std::cout << "real32: ";
             std::cin >> number;
             processor.set_real32(number, r2_i);
             break;

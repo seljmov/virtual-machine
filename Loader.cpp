@@ -148,7 +148,8 @@ std::vector<std::string> Loader::split(const std::string &str, char delim) {
 
 void Loader::remove_trash(std::vector<std::string> &cmd) {
     // - Удаление комментария
-    for (auto i = cmd.size()-1; i >= 0; --i) {
+    // - Тут int, потому что число может быть < 0
+    for (int i = cmd.size()-1; i >= 0; --i) {
         if (cmd[i] == ";") {
             cmd.erase(cmd.begin()+i, cmd.end());
             break;
