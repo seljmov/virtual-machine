@@ -72,100 +72,92 @@ void Processor::run() noexcept {
 }
 
 int16_t Processor::get_int16(const uint8_t &_reg) const {
-    verify_register_16bit(_reg);
     // - Так как у нас 4 массива по 2 регистра, что равно 8 регистрам,
     // - то доступ тоже производится особенным образом.
-    // - [0][0] и [0][1] - 1,2 регистры
-    // - [1][0] и [1][1] - 3,4 регистры
-    // - [2][0] и [2][1] - 5,6 регистры
-    // - [3][0] и [3][1] - 7,8 регистры
+    // - [0][0] и [0][1] - 0,1 регистры
+    // - [1][0] и [1][1] - 2,3 регистры
+    // - [2][0] и [2][1] - 4,5 регистры
+    // - [3][0] и [3][1] - 6,7 регистры
     // - Определение внешнего массива:
     // - Чтобы определить какой из 4-х массив используется:
-    // - Если _reg нечетный, то _reg / 2, иначе _reg / 2 - 1;
+    // - Если _reg четный, то _reg / 2, иначе _reg / 2 - 1;
     // - Определение внутреннего массива:
     // - Для доступа ко второму массиву:
-    // - Если _reg нечетный, то 0, иначе 1;
+    // - Если _reg четный, то 0, иначе 1;
     uint8_t ex = 0; // - Индекс внешнего массива
     uint8_t in = 0; // - Индекс внутреннего массива
     // - Определяем внешний массив
-    if (_reg % 2 == 1) ex = _reg / 2;
+    if (_reg % 2 == 0) ex = _reg / 2;
     else ex = _reg / 2 - 1;
     // - Определяем внутренний массив
-    if (_reg % 2 == 1) in = 0;
+    if (_reg % 2 == 0) in = 0;
     else in = 1;
     // - Возвращаем результат
     return regs[ex].word16[in].int16;
 }
 
 uint16_t Processor::get_uint16(const uint8_t &_reg) const {
-    verify_register_16bit(_reg);
     uint8_t ex = 0; // - Индекс внешнего массива
     uint8_t in = 0; // - Индекс внутреннего массива
     // - Определяем внешний массив
-    if (_reg % 2 == 1) ex = _reg / 2;
+    if (_reg % 2 == 0) ex = _reg / 2;
     else ex = _reg / 2 - 1;
     // - Определяем внутренний массив
-    if (_reg % 2 == 1) in = 0;
+    if (_reg % 2 == 0) in = 0;
     else in = 1;
     // - Возвращаем результат
     return regs[ex].word16[in].uint16;
 }
 
 int32_t Processor::get_int32(const uint8_t &_reg) const {
-    verify_register_32bit(_reg);
     // - Тут все проще - достаточно только определить внешний массив
-    // - Так как все номера четные, то _reg / 2 - 1;
-    uint8_t ex = _reg / 2 - 1;
+    // - Так как все номера четные, то _reg / 2;
+    uint8_t ex = _reg / 2;
     return regs[ex].word32.int32;
 }
 
 float Processor::get_real32(const uint8_t &_reg) const {
-    verify_register_32bit(_reg);
     // - Тут все проще - достаточно только определить внешний массив
-    // - Так как все номера четные, то _reg / 2 - 1;
-    uint8_t ex = _reg / 2 - 1;
+    // - Так как все номера четные, то _reg / 2 ;
+    uint8_t ex = _reg / 2;
     return regs[ex].word32.real32;
 }
 
 void Processor::set_int16(const int16_t& int16, const uint8_t &_reg) {
-    verify_register_16bit(_reg);
     uint8_t ex = 0; // - Индекс внешнего массива
     uint8_t in = 0; // - Индекс внутреннего массива
     // - Определяем внешний массив
-    if (_reg % 2 == 1) ex = _reg / 2;
+    if (_reg % 2 == 0) ex = _reg / 2;
     else ex = _reg / 2 - 1;
     // - Определяем внутренний массив
-    if (_reg % 2 == 1) in = 0;
+    if (_reg % 2 == 0) in = 0;
     else in = 1;
     regs[ex].word16[in].int16 = int16;
 }
 
 void Processor::set_uint16(const uint16_t& uint16, const uint8_t &_reg) {
-    verify_register_16bit(_reg);
     uint8_t ex = 0; // - Индекс внешнего массива
     uint8_t in = 0; // - Индекс внутреннего массива
     // - Определяем внешний массив
-    if (_reg % 2 == 1) ex = _reg / 2;
+    if (_reg % 2 == 0) ex = _reg / 2;
     else ex = _reg / 2 - 1;
     // - Определяем внутренний массив
-    if (_reg % 2 == 1) in = 0;
+    if (_reg % 2 == 0) in = 0;
     else in = 1;
     regs[ex].word16[in].uint16 = uint16;
 }
 
 void Processor::set_int32(const int32_t& int32, const uint8_t &_reg) {
-    verify_register_32bit(_reg);
     // - Тут все проще - достаточно только определить внешний массив
-    // - Так как все номера четные, то _reg / 2 - 1;
-    uint8_t ex = _reg / 2 - 1;
+    // - Так как все номера четные, то _reg / 2;
+    uint8_t ex = _reg / 2;
     regs[ex].word32.int32 = int32;
 }
 
 void Processor::set_real32(const float& real32, const uint8_t &_reg) {
-    verify_register_32bit(_reg);
     // - Тут все проще - достаточно только определить внешний массив
-    // - Так как все номера четные, то _reg / 2 - 1;
-    uint8_t ex = _reg / 2 - 1;
+    // - Так как все номера четные, то _reg / 2;
+    uint8_t ex = _reg / 2;
     regs[ex].word32.real32 = real32;
 }
 
@@ -173,7 +165,8 @@ void Processor::verify_register_16bit(const uint8_t &_reg) {
     // - Если номер не в диапазоне [1,8],
     // - То кидаем исключение
     if (_reg < 1 || _reg > 8) {
-        throw invalid_register("Неправильный номер 16-битного регистра!");
+        std::cout << "_reg: " << +_reg << "\n";
+        throw invalid_register("Неправильный номер 16-битного регистра! -> " + std::to_string(_reg));
     }
 }
 

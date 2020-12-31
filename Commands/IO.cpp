@@ -85,22 +85,22 @@ void Output::operator()(Processor &processor) {
     switch (mode) {
         case output_int16: {
             int16_t number = processor.get_int16(r2_i);
-            std::cout << "int16: " << number;
+            std::cout << "int16: " << number << "\n";
             break;
         }
         case output_uint16: {
             uint16_t number = processor.get_uint16(r2_i);
-            std::cout << "uint16: " << number;
+            std::cout << "uint16: " << number << "\n";
             break;
         }
         case output_int32: {
             int32_t number = processor.get_int32(r2_i);
-            std::cout << "int32: " << number;
+            std::cout << "int32: " << number << "\n";
             break;
         }
         case output_real32: {
             float number = processor.get_real32(r2_i);
-            std::cout << "real32: " << number;
+            std::cout << "real32: " << number << "\n";
             break;
         }
     }
