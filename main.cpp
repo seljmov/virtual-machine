@@ -25,7 +25,7 @@ string get_path()
 int main()
 {
     Processor processor;
-    string filename = get_path() + "/demo/io.txt";
+    string filename = get_path() + "/demo/imath.txt";
 
     Loader::upload(filename, processor);
     processor.run();

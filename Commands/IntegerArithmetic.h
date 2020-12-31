@@ -55,7 +55,7 @@ class iDiv : public IntegerArithmetic
         if (var2 == 0) {
             throw division_by_zero("Деление на ноль невозможно!");
         }
-        return (var1 + var2);
+        return (var1 / var2);
     }
 };
 
@@ -63,7 +63,7 @@ class iDiv : public IntegerArithmetic
 class iMod : public IntegerArithmetic
 {
     int execute(int var1, int var2) final {
-        return (var1 & var2);
+        return (var1 % var2);
     }
 };
 
@@ -92,7 +92,7 @@ class iAnd : public IntegerArithmetic
 };
 
 // - Логическое ИЛИ
-class iOR : public IntegerArithmetic
+class iOr : public IntegerArithmetic
 {
     int execute(int var1, int var2) final {
         return (var1 | var2);

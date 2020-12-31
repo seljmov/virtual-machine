@@ -17,7 +17,7 @@ Processor::Processor() {
     commands[iInc] = new class iInc();
     commands[iDec] = new class iDec();
     commands[iAnd] = new class iAnd();
-    commands[iOr] = new class iOR();
+    commands[iOr] = new class iOr();
     commands[iNot] = new class iNot();
 
     commands[rAdd] = new class rAdd();
