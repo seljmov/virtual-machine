@@ -19,7 +19,9 @@ public:
 
     inline void inc_IP() noexcept { ++IP; }
     inline void set_IP(uint16_t addr) noexcept { IP = addr; };
+    // - Если 1, то число == 0, иначе если 0, то число != 0
     inline void set_ZF(int32_t i) noexcept { ZF = (i == 0); }
+    // - Если 1, то число < 0, иначе если 0, то число >= 0
     inline void set_SF(int32_t i) noexcept { SF = (i < 0); }
 
     inline void reset_flags() noexcept { ZF = SF = 0; }

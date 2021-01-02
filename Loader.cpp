@@ -30,7 +30,7 @@ void Loader::upload(const std::string &filename, Processor &processor) {
             // - Формат: r <число>
             case 'r': read_real(istring, processor, address); break;
             // - Формат: c <opcode> <ss> <dd> <операнды>
-            case 'c': read_command(istring, processor, address);
+            case 'c': read_command(istring, processor, address); break;
             // - Формат: e <адрес памяти>
             case 'e': read_last(istring, processor, address); break;
         }
