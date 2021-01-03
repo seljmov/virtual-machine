@@ -10,6 +10,7 @@ void Input::operator()(Processor &processor) {
         throw invalid_io_operation("Неправильный формат операции ввода/вывода!");
     }
 
+    // - Тип ввода
     enum in_mode : uint8_t {
         input_int16 = 0,
         input_uint16 = 1,
@@ -17,16 +18,22 @@ void Input::operator()(Processor &processor) {
         input_real32 = 3,
     };
 
+    // - Регистр, в который вводим число
     const uint8_t r2_i = processor.get_cmd_r2();
+    // - Узнаем тип ввода
     address_t mode = 0;
+    // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
+        // - Если в регистре
         const uint8_t r1_i = processor.get_cmd_r1();
         mode = processor.get_int16(r1_i);
     } else {
+        // - Если в памяти
         const address_t o1_i = processor.get_cmd_o1();
         mode = processor.get_from_mem(o1_i).word.word16->int16;
     }
 
+    // - Ввод числа
     switch (mode) {
         case input_int16: {
             int16_t number = 0;
@@ -69,6 +76,7 @@ void Output::operator()(Processor &processor) {
         throw invalid_io_operation("Неправильный формат операции ввода/вывода!");
     }
 
+    // - Тип вывода
     enum in_mode : uint8_t {
         output_int16 = 0,
         output_uint16 = 1,
@@ -76,16 +84,22 @@ void Output::operator()(Processor &processor) {
         output_real32 = 3,
     };
 
+    // - Регистр, из которого выводим число
     const uint8_t r2_i = processor.get_cmd_r2();
+    // - Узнаем тип вывода
     address_t mode = 0;
+    // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
+        // - Если в регистре
         const uint8_t r1_i = processor.get_cmd_r1();
         mode = processor.get_int16(r1_i);
     } else {
+        // - Если в памяти
         const address_t o1_i = processor.get_cmd_o1();
         mode = processor.get_from_mem(o1_i).word.word16->int16;
     }
 
+    // - Вывод числа
     switch (mode) {
         case output_int16: {
             int16_t number = processor.get_int16(r2_i);

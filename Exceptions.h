@@ -51,7 +51,7 @@ public:
     ~invalid_io_operation() override = default;
 };
 
-// - Неправильная номер регистра
+// - Неправильный номер регистра
 class invalid_register : public exception_with_text
 {
 public:

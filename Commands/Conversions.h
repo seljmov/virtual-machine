@@ -3,6 +3,7 @@
 
 #include "Command.h"
 
+// - Безусловный прыжок
 class Jmp : public Command
 {
 public:
@@ -12,6 +13,7 @@ public:
     }
 };
 
+// - Прыжок, если ZF = 1
 class Jzf : public Jmp
 {
 public:
@@ -22,6 +24,7 @@ public:
     }
 };
 
+// - Прыжок, если ZF = 0
 class Jnzf : public Jmp
 {
 public:
@@ -32,6 +35,7 @@ public:
     }
 };
 
+// - Прыжок, если SF = 1
 class Jsf : public Jmp
 {
 public:
@@ -42,6 +46,7 @@ public:
     }
 };
 
+// - Прыжок, если SF = 0
 class Jnsf : public Jmp
 {
 public:
@@ -52,10 +57,14 @@ public:
     }
 };
 
+// - Вывод подпрограммы
 class Call : public Jmp
 {
 public:
     inline void operator()(Processor& processor) noexcept final {
+        // - Адрес возрата (текущий IP) кладем в 1 регистр,
+        // - а во втором регистре лежит адрес для прыжка
+        // - Тут сделан выбор в пользу s = 0, dd = 10
         const uint8_t r1_i = processor.get_cmd_r1();
         const uint8_t r2_i = processor.get_cmd_r2();
         const address_t _ret_ip = processor.psw.get_IP();
@@ -65,10 +74,12 @@ public:
     }
 };
 
+// - Возврат из подпрограммы
 class Ret : public Jmp
 {
 public:
     inline void operator()(Processor& processor) noexcept final {
+        // - Узнаем адрес возврата и делаем безусловный прыжок
         const uint8_t r1_i = processor.get_cmd_r1();
         const address_t _ret_ip = processor.get_uint16(r1_i);
         processor.psw.set_IP(_ret_ip);

@@ -110,6 +110,7 @@ uint16_t Processor::get_uint16(const uint8_t &_reg) const {
 }
 
 int32_t Processor::get_int32(const uint8_t &_reg) const {
+    verify_register(_reg);
     // - Тут все проще - достаточно только определить внешний массив
     // - Так как все номера четные, то _reg / 2;
     uint8_t ex = _reg / 2;
@@ -117,6 +118,7 @@ int32_t Processor::get_int32(const uint8_t &_reg) const {
 }
 
 float Processor::get_real32(const uint8_t &_reg) const {
+    verify_register(_reg);
     // - Тут все проще - достаточно только определить внешний массив
     // - Так как все номера четные, то _reg / 2 ;
     uint8_t ex = _reg / 2;
@@ -148,6 +150,7 @@ void Processor::set_uint16(const uint16_t& uint16, const uint8_t &_reg) {
 }
 
 void Processor::set_int32(const int32_t& int32, const uint8_t &_reg) {
+    verify_register(_reg);
     // - Тут все проще - достаточно только определить внешний массив
     // - Так как все номера четные, то _reg / 2;
     uint8_t ex = _reg / 2;
@@ -155,22 +158,14 @@ void Processor::set_int32(const int32_t& int32, const uint8_t &_reg) {
 }
 
 void Processor::set_real32(const float& real32, const uint8_t &_reg) {
+    verify_register(_reg);
     // - Тут все проще - достаточно только определить внешний массив
     // - Так как все номера четные, то _reg / 2;
     uint8_t ex = _reg / 2;
     regs[ex].word32.real32 = real32;
 }
 
-void Processor::verify_register_16bit(const uint8_t &_reg) {
-    // - Если номер не в диапазоне [1,8],
-    // - То кидаем исключение
-    if (_reg < 1 || _reg > 8) {
-        std::cout << "_reg: " << +_reg << "\n";
-        throw invalid_register("Неправильный номер 16-битного регистра! -> " + std::to_string(_reg));
-    }
-}
-
-void Processor::verify_register_32bit(const uint8_t &_reg) {
+void Processor::verify_register(const uint8_t &_reg) {
     // - Если номер не в диапазоне [1,8] или нечетный,
     // - То кидаем исключение
     if ((_reg < 1 || _reg > 8) || _reg % 2 == 1) {

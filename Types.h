@@ -40,10 +40,13 @@ union word_t
 };
 
 // - Тип данных, из которого состоит память
+// - Тут можно выравнять, чтобы не занимать лишние 2 байта
+#pragma pack(push, 1)
 union data_t
 {
     word_t word;            // - Слово
     cmd_t cmd;              // - Команда
 };
+#pragma pack(pop)
 
 #endif // TYPES_H

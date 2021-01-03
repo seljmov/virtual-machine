@@ -49,6 +49,9 @@ enum Operations : uint8_t
     ret = 26,       // - Возврат из подпрограммы
 };
 
+// - Сделаем выравнивание, чтобы не занимать лишние 4 байта
+// - До выравнивания 304 байта, после - 298
+#pragma pack(push, 1)
 class Processor
 {
 public:
@@ -119,11 +122,10 @@ private:
     // - Массив из указателей на команды
     class Command* commands[32]{nullptr};
 
-    // - Методы проверки кидают исключения
-    // - Проверка номера 16-битного регистра
-    static void verify_register_16bit(const uint8_t& _reg);
+    // - Метод проверки кидает исключения
     // - Проверка номера 32-битного регистра
-    static void verify_register_32bit(const uint8_t& _reg);
+    static void verify_register(const uint8_t& _reg);
 };
+#pragma pack(pop)
 
 #endif // PROCESSOR_H

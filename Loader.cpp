@@ -5,7 +5,7 @@ void Loader::upload(const std::string &filename, Processor &processor) {
     file.open(filename);
 
     if (!file.is_open()) {
-        throw invalid_path("Указан неверный путь к файлу");
+        throw invalid_path("Указан неверный путь к файлу!");
     }
 
     address_t address = 0;
