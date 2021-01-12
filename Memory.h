@@ -16,8 +16,9 @@ public:
     Memory& operator=(const Memory&) = delete;
     Memory& operator=(const Memory&&) = delete;
 
-    inline data_t& operator[](const address_t& addr) noexcept
-    { return memory[addr]; }
+    inline data_t& operator[](const address_t& addr) noexcept {
+        return memory[addr];
+    }
 
 private:
     // - Тут получается 10922, ибо 65535 / 6

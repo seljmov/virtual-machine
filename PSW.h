@@ -13,12 +13,6 @@ public:
 
     PSW() : ZF(0), SF(0), IP(0) {}
 
-    inline uint16_t get_IP() const noexcept { return IP; }
-    inline uint8_t get_ZF() const noexcept { return ZF; }
-    inline uint8_t get_SF() const noexcept { return SF; }
-
-    inline void inc_IP() noexcept { ++IP; }
-    inline void set_IP(uint16_t addr) noexcept { IP = addr; };
     // - Если 1, то число == 0, иначе если 0, то число != 0
     inline void set_ZF(int32_t i) noexcept { ZF = (i == 0); }
     // - Если 1, то число < 0, иначе если 0, то число >= 0

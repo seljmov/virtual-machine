@@ -13,7 +13,7 @@ public:
     explicit exception_with_text(std::string what) : _what(std::move(what)) {}
     virtual ~exception_with_text() override = default;
 
-    const char* what() const noexcept override
+    const char* what() const noexcept final
     {
         return _what.c_str();
     }
@@ -25,22 +25,6 @@ class invalid_path : public exception_with_text
 public:
     explicit invalid_path(const std::string &what) : exception_with_text(what) {}
     ~invalid_path() override = default;
-};
-
-// - Выход за пределы памяти
-class out_of_memory : public exception_with_text
-{
-public:
-    explicit out_of_memory(const std::string &what) : exception_with_text(what) {}
-    ~out_of_memory() override = default;
-};
-
-// - Деление на ноль
-class division_by_zero : public exception_with_text
-{
-public:
-    explicit division_by_zero(const std::string &what) : exception_with_text(what) {}
-    ~division_by_zero() override = default;
 };
 
 // - Неправильная операция ввода\вывода

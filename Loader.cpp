@@ -1,8 +1,22 @@
 #include "Loader.h"
 
+std::string Loader::get_path() noexcept {
+    // - Получаю абсолютный путь
+    std::string path = std::filesystem::current_path();
+    // - Так как у меня Cmake, то исполняемый файл находится в папке
+    // - cmake-build-debug, поэтому я обрезаю этот каталог из пути
+    for (size_t i = path.size()-1; i >= 0; --i) {
+        if (path[i] == '/') {
+            path = path.substr(0, i);
+            break;
+        }
+    }
+    return path;
+}
+
 void Loader::upload(const std::string &filename, Processor &processor) {
     std::ifstream file;
-    file.open(filename);
+    file.open(get_path() + filename);
 
     if (!file.is_open()) {
         throw invalid_path("Указан неверный путь к файлу!");
@@ -63,14 +77,14 @@ void Loader::read_integer(std::istringstream &strm, Processor &proc, address_t &
     if (s == 0) strm >> word.word16->int16;
     // - Иначе 32 бита
     else strm >> word.word32.int32;
-    proc.push_to_mem({word, }, addr);
+    proc.memory[addr] = {word};
     ++addr;
 }
 
 void Loader::read_real(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     word_t word;
     strm >> word.word32.real32;
-    proc.push_to_mem({word, }, addr);
+    proc.memory[addr] = {word};
     ++addr;
 }
 
@@ -123,17 +137,17 @@ void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &
 
     data_t to_mem;
     to_mem.cmd = command;
-    proc.push_to_mem(to_mem, addr);
+    proc.memory[addr] = to_mem;
     ++addr;
 }
 
 void Loader::read_last(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
     data_t data;
     data.cmd.code = 0;
-    proc.push_to_mem(data, addr);
+    proc.memory[addr] = data;
     address_t IP;
     strm >> IP;
-    proc.psw.set_IP(IP);
+    proc.psw.IP = IP;
 }
 
 std::vector<std::string> Loader::split(const std::string &str, char delim) {

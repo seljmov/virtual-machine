@@ -1,7 +1,7 @@
 #include "IO.h"
 
 void Input::operator()(Processor &processor) {
-    const uint8_t dd = processor.get_cmd_dd();
+    const uint8_t dd = processor.cmd.dd;
     // - Ввод только в регистр!
     // - 1 операнд - регистр/адрес - тип ввода
     // - 2 операнд - регистр - приемник
@@ -19,17 +19,17 @@ void Input::operator()(Processor &processor) {
     };
 
     // - Регистр, в который вводим число
-    const uint8_t r2_i = processor.get_cmd_r2();
+    const uint8_t r2_i = processor.cmd.r2;
     // - Узнаем тип ввода
     address_t mode;
     // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
         // - Если в регистре
-        const uint8_t r1_i = processor.get_cmd_r1();
-        mode = processor.get_int16(r1_i);
+        const uint8_t r1_i = processor.cmd.r1;
+        mode = get_int16(processor, r1_i);
     } else {
         // - Если в памяти
-        const address_t o1_i = processor.get_cmd_o1();
+        const address_t o1_i = processor.cmd.o1;
         mode = processor.memory[o1_i].word.word16->int16;
     }
 
@@ -39,35 +39,35 @@ void Input::operator()(Processor &processor) {
             int16_t number = 0;
             std::cout << "int16: ";
             std::cin >> number;
-            processor.set_int16(number, r2_i);
+            set_int16(processor, number, r2_i);
             break;
         }
         case input_uint16: {
             uint16_t number = 0;
             std::cout << "uint16: ";
             std::cin >> number;
-            processor.set_uint16(number, r2_i);
+            set_uint16(processor, number, r2_i);
             break;
         }
         case input_int32: {
             int32_t number = 0;
             std::cout << "int32: ";
             std::cin >> number;
-            processor.set_int32(number, r2_i);
+            set_int32(processor, number, r2_i);
             break;
         }
         case input_real32: {
             float number = 0;
             std::cout << "real32: ";
             std::cin >> number;
-            processor.set_real32(number, r2_i);
+            set_real32(processor, number, r2_i);
             break;
         }
     }
 }
 
 void Output::operator()(Processor &processor) {
-    const uint8_t dd = processor.get_cmd_dd();
+    const uint8_t dd = processor.cmd.dd;
     // - Вывод только из регистра!
     // - 1 операнд - регистр/адрес - тип ввода
     // - 2 операнд - регистр - что выводим
@@ -85,39 +85,39 @@ void Output::operator()(Processor &processor) {
     };
 
     // - Регистр, из которого выводим число
-    const uint8_t r2_i = processor.get_cmd_r2();
+    const uint8_t r2_i = processor.cmd.r2;
     // - Узнаем тип вывода
     address_t mode;
     // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
         // - Если в регистре
-        const uint8_t r1_i = processor.get_cmd_r1();
-        mode = processor.get_int16(r1_i);
+        const uint8_t r1_i = processor.cmd.r1;
+        mode = get_int16(processor, r1_i);
     } else {
         // - Если в памяти
-        const address_t o1_i = processor.get_cmd_o1();
+        const address_t o1_i = processor.cmd.o1;
         mode = processor.memory[o1_i].word.word16->int16;
     }
 
     // - Вывод числа
     switch (mode) {
         case output_int16: {
-            int16_t number = processor.get_int16(r2_i);
+            int16_t number = get_int16(processor, r2_i);
             std::cout << "int16: " << number << "\n";
             break;
         }
         case output_uint16: {
-            uint16_t number = processor.get_uint16(r2_i);
+            uint16_t number = get_uint16(processor, r2_i);
             std::cout << "uint16: " << number << "\n";
             break;
         }
         case output_int32: {
-            int32_t number = processor.get_int32(r2_i);
+            int32_t number = get_int32(processor, r2_i);
             std::cout << "int32: " << number << "\n";
             break;
         }
         case output_real32: {
-            float number = processor.get_real32(r2_i);
+            float number = get_real32(processor, r2_i);
             std::cout << "real32: " << number << "\n";
             break;
         }

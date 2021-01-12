@@ -1,6 +1,7 @@
 #ifndef LOADER_H
 #define LOADER_H
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -15,6 +16,10 @@ public:
     static void upload(const std::string& filename, Processor& processor);
 
 private:
+    // - Так как я на Linux Pop!_OS,
+    // - то мне нужен абсолютный путь к файлу :)
+    static std::string get_path() noexcept;
+
     // - Проверка на то, является ли операнд регистром,
     // - Если нет, то это память
     static bool is_register(const std::string& str) noexcept;

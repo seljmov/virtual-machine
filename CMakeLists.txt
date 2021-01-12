@@ -14,4 +14,4 @@ add_executable(
         Commands/IMath.cpp Commands/IMath.h
         Commands/RMath.cpp Commands/RMath.h
         Commands/Jumps.cpp Commands/Jumps.h
-)
+        Commands/Command.cpp)
