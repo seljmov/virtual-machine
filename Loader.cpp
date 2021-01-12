@@ -22,6 +22,9 @@ void Loader::upload(const std::string &filename, Processor &processor) {
         throw invalid_path("Указан неверный путь к файлу!");
     }
 
+    // - Базовый адрес. Нужен для того, чтобы
+    // - в операндах адрес задавать относительно
+    address_t base_address = 0;
     address_t address = 0;
     char symbol = ' ';
 
@@ -38,13 +41,13 @@ void Loader::upload(const std::string &filename, Processor &processor) {
         {
             // - Указываем IP
             // - Формат: a <адрес>
-            case 'a': read_address(istring, address); break;
+            case 'a': read_address(istring, address); base_address = address; break;
             // - Формат: i <размер> <число>
             case 'i': read_integer(istring, processor, address); break;
             // - Формат: r <число>
             case 'r': read_real(istring, processor, address); break;
             // - Формат: c <opcode> <ss> <dd> <операнды>
-            case 'c': read_command(istring, processor, address); break;
+            case 'c': read_command(istring, processor, address, base_address); break;
             // - Формат: e <адрес памяти>
             case 'e': read_last(istring, processor, address); break;
         }
@@ -88,7 +91,7 @@ void Loader::read_real(std::istringstream &strm, Processor &proc, address_t &add
     ++addr;
 }
 
-void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &addr) noexcept {
+void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &addr, address_t b_addr) noexcept {
     cmd_t command;
 
     // - Получаем вектор строк, где каждый элемент = элемент команды
@@ -117,7 +120,7 @@ void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &
     else
     {
         f_operand = f_operand.substr(1);
-        command.o1 = uint8_t(std::stoi(f_operand));
+        command.o1 = b_addr + address_t (std::stoi(f_operand));
     }
 
     // - Второй операнд
@@ -132,7 +135,7 @@ void Loader::read_command(std::istringstream &strm, Processor &proc, address_t &
     else
     {
         s_operand = s_operand.substr(1);
-        command.o2 = uint8_t(std::stoi(s_operand));
+        command.o2 = b_addr + address_t (std::stoi(s_operand));
     }
 
     data_t to_mem;

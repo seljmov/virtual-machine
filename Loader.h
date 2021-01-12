@@ -31,7 +31,7 @@ private:
     // - Чтение вещественного числа и запись в память
     static void read_real(std::istringstream& strm, Processor& proc, address_t& addr) noexcept;
     // - Чтение команды и запись в память
-    static void read_command(std::istringstream& strm, Processor& proc, address_t& addr) noexcept;
+    static void read_command(std::istringstream& strm, Processor& proc, address_t& addr, address_t d_addr) noexcept;
     // - Чтение последней команды и запись в память
     static void read_last(std::istringstream& strm, Processor& proc, address_t& addr) noexcept;
 
