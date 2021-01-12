@@ -1,24 +1,24 @@
 #include "Processor.h"
 #include "Commands/Movements.h"
-#include "Commands/IntegerArithmetic.h"
 #include "Commands/RealArithmetic.h"
 #include "Commands/Conversions.h"
 #include "Commands/IO.h"
+#include "Commands/IMath.h"
 
 Processor::Processor() {
     commands[stop] = nullptr;
     commands[move] = new class Move();
 
-    commands[iAdd] = new class iAdd();
-    commands[iSub] = new class iSub();
-    commands[iMul] = new class iMul();
-    commands[iDiv] = new class iDiv();
-    commands[iMod] = new class iMod();
-    commands[iInc] = new class iInc();
-    commands[iDec] = new class iDec();
-    commands[iAnd] = new class iAnd();
-    commands[iOr] = new class iOr();
-    commands[iNot] = new class iNot();
+    commands[iAdd] = new class IMath([](int a, int b) { return (a + b); });
+    commands[iSub] = new class IMath([](int a, int b) { return (a - b); });
+    commands[iMul] = new class IMath([](int a, int b) { return (a * b); });
+    commands[iDiv] = new class IMath([](int a, int b) { return (a / b); });
+    commands[iMod] = new class IMath([](int a, int b) { return (a % b); });
+    commands[iInc] = new class IMath([](int a, int b) { return (a + 1); });
+    commands[iDec] = new class IMath([](int a, int b) { return (a - 1); });
+    commands[iAnd] = new class IMath([](int a, int b) { return (a & b); });
+    commands[iOr]  = new class IMath([](int a, int b) { return (a | b); });
+    commands[iNot] = new class IMath([](int a, int b) { return (~a); });
 
     commands[rAdd] = new class rAdd();
     commands[rSub] = new class rSub();
