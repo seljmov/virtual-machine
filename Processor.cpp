@@ -1,10 +1,9 @@
 #include "Processor.h"
 #include "Commands/Movements.h"
-#include "Commands/RealArithmetic.h"
-#include "Commands/Conversions.h"
 #include "Commands/IO.h"
 #include "Commands/IMath.h"
 #include "Commands/RMath.h"
+#include "Commands/Jumps.h"
 
 Processor::Processor() {
     commands[stop] = nullptr;
@@ -29,11 +28,12 @@ Processor::Processor() {
     commands[input] = new class Input();
     commands[output] = new class Output();
 
-    commands[jmp] = new class Jmp();
-    commands[jzf] = new class Jzf();
-    commands[jnzf] = new class Jnzf();
-    commands[jsf] = new class Jsf();
-    commands[jnsf] = new class Jnsf();
+    // - Тут просто "return true", так как безусловный переход :)
+    commands[jmp] = new class Jumps([](Processor& p) { return true; });
+    commands[jzf] = new class Jumps([](Processor& p) { return (p.psw.ZF == 1); });
+    commands[jnzf] = new class Jumps([](Processor& p) { return (p.psw.ZF == 0); });
+    commands[jsf] = new class Jumps([](Processor& p) { return (p.psw.SF == 1); });
+    commands[jnsf] = new class Jumps([](Processor& p) { return (p.psw.ZF == 0); });
 
     commands[call] = new class Call();
     commands[ret] = new class Ret();

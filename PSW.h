@@ -5,12 +5,12 @@
 
 class PSW
 {
+public:
     uint8_t ZF : 1;             // - Флаг нуля
     uint8_t SF : 1;             // - Флаг знака
     uint16_t reserved : 14;     // - В резерве
     uint16_t IP;                // - Указатель инструкции
 
-public:
     PSW() : ZF(0), SF(0), IP(0) {}
 
     inline uint16_t get_IP() const noexcept { return IP; }
