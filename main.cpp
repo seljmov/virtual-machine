@@ -24,11 +24,18 @@ string get_path()
 
 int main()
 {
-    Processor processor;
-    string filename = get_path() + "/demo/jumps.txt";
+//    Processor processor;
+//    string filename = get_path() + "/demo/jumps.txt";
+//
+//    Loader::upload(filename, processor);
+//    processor.run();
 
-    Loader::upload(filename, processor);
-    processor.run();
+    auto size = std::numeric_limits<uint16_t>::max();
+    auto data = sizeof(data_t);
+
+    cout << "size: " << size << "\n";
+    cout << "data: " << data << "\n";
+    cout << "div: " << size / data << "\n";
 
     return 0;
 }

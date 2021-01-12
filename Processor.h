@@ -26,12 +26,6 @@ public:
     Processor& operator=(const Processor&) = delete;
     Processor& operator=(const Processor&&) = delete;
 
-    // - Работа с памятью
-    // - Получить данные из памяти
-    data_t get_from_mem(const address_t& addr) const noexcept;
-    // - Положить данные в память
-    void push_to_mem(const data_t& data, const address_t& addr) noexcept;
-
     // - Работа с регистрами
     // - Получить из указанного регистра int16
     int16_t get_int16(const uint8_t& _reg) const;

@@ -81,7 +81,7 @@ void IMath::handle_reg_to_mem(Processor &processor) noexcept {
     // - Потому что сохраняем в память
     data_t new_data;
     // - Берем требуемые данные из памяти
-    data_t from_mem = processor.get_from_mem(o2_i);
+    data_t from_mem = processor.memory[o2_i];
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
@@ -101,7 +101,7 @@ void IMath::handle_reg_to_mem(Processor &processor) noexcept {
         new_data.word.word32.int32 = execute(var1, var2);
     }
     // - Отправляем результат по адресу
-    processor.push_to_mem(new_data, o2_i);
+    processor.memory[o2_i] = new_data;
 }
 
 void IMath::handle_mem_to_reg(Processor &processor) noexcept {
@@ -111,7 +111,7 @@ void IMath::handle_mem_to_reg(Processor &processor) noexcept {
     const address_t o1_i = processor.get_cmd_o1();
     const uint8_t r2_i = processor.get_cmd_r2();
     // - Берем требуемые данные из памяти
-    data_t from_mem = processor.get_from_mem(o1_i);
+    data_t from_mem = processor.memory[o1_i];
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
@@ -145,8 +145,8 @@ void IMath::handle_mem_to_mem(Processor &processor) noexcept {
     // - Потому что сохраняем в память
     data_t new_data;
     // - Берем требуемые данные из памяти
-    data_t from_mem_1 = processor.get_from_mem(o1_i);
-    data_t from_mem_2 = processor.get_from_mem(o2_i);
+    data_t from_mem_1 = processor.memory[o1_i];
+    data_t from_mem_2 = processor.memory[o2_i];
     // - Если размер операнда - 1 слово
     if (s == 0)
     {
@@ -166,5 +166,5 @@ void IMath::handle_mem_to_mem(Processor &processor) noexcept {
         new_data.word.word32.int32 = execute(var1, var2);
     }
     // - Отправляем результат по адресу
-    processor.push_to_mem(new_data, o2_i);
+    processor.memory[o2_i] = new_data;
 }

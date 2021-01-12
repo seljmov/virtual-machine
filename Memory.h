@@ -16,21 +16,14 @@ public:
     Memory& operator=(const Memory&) = delete;
     Memory& operator=(const Memory&&) = delete;
 
-    // - Проверка адреса, присутствующая в обоих методах,
-    // - может кинуть исключение, поэтому нет noexcept
-    // - Добавление в память
-    void push(const data_t& data, const address_t& addr);
-    // - Возвращение из памяти
-    data_t get_data(const address_t& addr) const;
+    inline data_t& operator[](const address_t& addr) noexcept
+    { return memory[addr]; }
 
 private:
-    // - ВМ маленькая, тут и 255 команд хватит :)
-    constexpr static const uint8_t SIZE = std::numeric_limits<uint8_t>::max();
+    // - Тут получается 10922, ибо 65535 / 6
+    constexpr static const address_t SIZE =
+            std::numeric_limits<uint16_t>::max() / sizeof(data_t);
     data_t* memory{nullptr};
-
-    // - Метод кидает исключение, поэтому void
-    // - Проверка адреса
-    void verify_address(const address_t& address) const;
 };
 
 #endif // MEMORY_H

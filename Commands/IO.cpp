@@ -21,7 +21,7 @@ void Input::operator()(Processor &processor) {
     // - Регистр, в который вводим число
     const uint8_t r2_i = processor.get_cmd_r2();
     // - Узнаем тип ввода
-    address_t mode = 0;
+    address_t mode;
     // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
         // - Если в регистре
@@ -30,7 +30,7 @@ void Input::operator()(Processor &processor) {
     } else {
         // - Если в памяти
         const address_t o1_i = processor.get_cmd_o1();
-        mode = processor.get_from_mem(o1_i).word.word16->int16;
+        mode = processor.memory[o1_i].word.word16->int16;
     }
 
     // - Ввод числа
@@ -87,7 +87,7 @@ void Output::operator()(Processor &processor) {
     // - Регистр, из которого выводим число
     const uint8_t r2_i = processor.get_cmd_r2();
     // - Узнаем тип вывода
-    address_t mode = 0;
+    address_t mode;
     // - Тип может лежать в регистре или в памяти
     if (dd == 0) {
         // - Если в регистре
@@ -96,7 +96,7 @@ void Output::operator()(Processor &processor) {
     } else {
         // - Если в памяти
         const address_t o1_i = processor.get_cmd_o1();
-        mode = processor.get_from_mem(o1_i).word.word16->int16;
+        mode = processor.memory[o1_i].word.word16->int16;
     }
 
     // - Вывод числа

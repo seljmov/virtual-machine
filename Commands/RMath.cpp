@@ -49,14 +49,14 @@ void RMath::handle_reg_to_mem(Processor &processor) noexcept {
     // - Потому что сохраняем в память
     data_t new_data;
     // - Берем требуемые данные из памяти
-    data_t from_mem = processor.get_from_mem(o2_i);
+    data_t from_mem = processor.memory[o2_i];
     // - Определяем переменные
     auto var1 = processor.get_real32(r1_i);
     auto var2 = from_mem.word.word32.real32;
     // - Вычисляем
     new_data.word.word32.real32 = execute(var1, var2);
     // - Отправляем результат по адресу
-    processor.push_to_mem(new_data, o2_i);
+    processor.memory[o2_i] = new_data;
 }
 
 void RMath::handle_mem_to_reg(Processor &processor) noexcept {
@@ -64,7 +64,7 @@ void RMath::handle_mem_to_reg(Processor &processor) noexcept {
     const address_t o1_i = processor.get_cmd_o1();
     const uint8_t r2_i = processor.get_cmd_r2();
     // - Берем требуемые данные из памяти
-    data_t from_mem = processor.get_from_mem(o1_i);
+    data_t from_mem = processor.memory[o1_i];
     // - Определяем переменные
     auto var1 = from_mem.word.word32.real32;
     auto var2 = processor.get_real32(r2_i);
@@ -81,13 +81,13 @@ void RMath::handle_mem_to_mem(Processor &processor) noexcept {
     // - Потому что сохраняем в память
     data_t new_data;
     // - Берем требуемые данные из памяти
-    data_t from_mem_1 = processor.get_from_mem(o1_i);
-    data_t from_mem_2 = processor.get_from_mem(o2_i);
+    data_t from_mem_1 = processor.memory[o1_i];
+    data_t from_mem_2 = processor.memory[o2_i];
     // - Определяем переменные
     auto var1 = from_mem_1.word.word32.real32;
     auto var2 = from_mem_2.word.word32.real32;
     // - Вычисляем
     new_data.word.word32.real32 = execute(var1, var2);
     // - Отправляем результат по адресу
-    processor.push_to_mem(new_data, o2_i);
+    processor.memory[o2_i] = new_data;
 }

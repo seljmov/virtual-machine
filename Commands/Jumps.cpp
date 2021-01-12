@@ -16,7 +16,7 @@ void Jumps::go_to(Processor &processor) noexcept {
         // - dd = 01: адрес = o2
         case 1: {
             const address_t o2_i = processor.get_cmd_o2();
-            address = processor.get_from_mem(o2_i).word.word16->int16;
+            address = processor.memory[o2_i].word.word16->int16;
             break;
         }
         // - dd = 10: адрес = r2 – это косвенный переход
@@ -31,11 +31,11 @@ void Jumps::go_to(Processor &processor) noexcept {
             // - Для сокращения выделю индекс сразу
             const uint8_t idx = processor.get_cmd_r2();
             const address_t o2_i = processor.get_cmd_o2();
-            address = processor.get_uint16(idx) + processor.get_from_mem(o2_i).word.word16->int16;
+            address = processor.get_uint16(idx) + processor.memory[o2_i].word.word16->int16;
             break;
         }
     }
 
-    address_t _ip = (s == 0) ? address : processor.psw.get_IP() + address;
+    address_t _ip = (s == 0) ? address : processor.psw.IP + address;
     processor.psw.IP = _ip;
 }
