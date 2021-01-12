@@ -31,7 +31,7 @@ void IMath::set_flags(Processor &processor) noexcept {
         // - Узнаем результат
         result = processor.get_int16(r2_i);
     }
-        // - Иначе размер операнда - 2 слова
+    // - Иначе размер операнда - 2 слова
     else
     {
         // - Узнаем результат
@@ -55,7 +55,7 @@ void IMath::handle_reg_to_reg(Processor &processor) noexcept {
         auto var1 = processor.get_int16(r1_i);
         auto var2 = processor.get_int16(r2_i);
         // - Вычисляем
-        int16_t int16 = lambda(var1, var2);
+        int16_t int16 = execute(var1, var2);
         // - Записываем результат
         processor.set_int16(int16, r2_i);
     }
@@ -66,7 +66,7 @@ void IMath::handle_reg_to_reg(Processor &processor) noexcept {
         auto var1 = processor.get_int32(r1_i);
         auto var2 = processor.get_int32(r2_i);
         // - Вычисляем
-        int32_t int32 = lambda(var1, var2);
+        int32_t int32 = execute(var1, var2);
         // - Записываем результат
         processor.set_int32(int32, r2_i);
     }
@@ -89,7 +89,7 @@ void IMath::handle_reg_to_mem(Processor &processor) noexcept {
         auto var1 = processor.get_int16(r1_i);
         auto var2 = from_mem.word.word16->int16;
         // - Вычисляем
-        new_data.word.word16->int16 = lambda(var1, var2);
+        new_data.word.word16->int16 = execute(var1, var2);
     }
     // - Иначе размер операнда - 2 слова
     else
@@ -98,7 +98,7 @@ void IMath::handle_reg_to_mem(Processor &processor) noexcept {
         auto var1 = processor.get_int32(r1_i);
         auto var2 = from_mem.word.word32.int32;
         // - Вычисляем
-        new_data.word.word32.int32 = lambda(var1, var2);
+        new_data.word.word32.int32 = execute(var1, var2);
     }
     // - Отправляем результат по адресу
     processor.push_to_mem(new_data, o2_i);
@@ -119,7 +119,7 @@ void IMath::handle_mem_to_reg(Processor &processor) noexcept {
         auto var1 = from_mem.word.word16->int16;
         auto var2 = processor.get_int16(r2_i);
         // - Вычисляем
-        int16_t int16 = lambda(var1, var2);
+        int16_t int16 = execute(var1, var2);
         // - Записываем результат
         processor.set_int16(int16, r2_i);
     }
@@ -130,7 +130,7 @@ void IMath::handle_mem_to_reg(Processor &processor) noexcept {
         auto var1 = from_mem.word.word32.int32;
         auto var2 = processor.get_int32(r2_i);
         // - Вычисляем
-        int32_t int32 = lambda(var1, var2);
+        int32_t int32 = execute(var1, var2);
         // - Записываем результат
         processor.set_int32(int32, r2_i);
     }
@@ -154,16 +154,16 @@ void IMath::handle_mem_to_mem(Processor &processor) noexcept {
         auto var1 = from_mem_1.word.word16->int16;
         auto var2 = from_mem_2.word.word16->int16;
         // - Вычисляем
-        new_data.word.word16->int16 = lambda(var1, var2);
+        new_data.word.word16->int16 = execute(var1, var2);
     }
-        // - Иначе размер операнда - 2 слова
+    // - Иначе размер операнда - 2 слова
     else
     {
         // - Определяем переменные
         auto var1 = from_mem_1.word.word32.int32;
         auto var2 = from_mem_2.word.word32.int32;
         // - Вычисляем
-        new_data.word.word32.int32 = lambda(var1, var2);
+        new_data.word.word32.int32 = execute(var1, var2);
     }
     // - Отправляем результат по адресу
     processor.push_to_mem(new_data, o2_i);

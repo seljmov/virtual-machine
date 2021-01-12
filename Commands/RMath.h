@@ -1,17 +1,17 @@
-#ifndef IMATH_H
-#define IMATH_H
+#ifndef RMATH_H
+#define RMATH_H
 
 #include <functional>
 #include "Command.h"
 
-class IMath : public Command
+class RMath : public Command
 {
 public:
-    IMath(std::function<int(int,int)> l) : execute(l) {}
+    RMath(std::function<float(float,float)> l) : execute(l) {}
     void operator()(Processor& processor) override;
 
 private:
-    std::function<int(int,int)> execute;
+    std::function<float(float,float)> execute;
 
     // - Устновка флагов
     static void set_flags(Processor& processor) noexcept;
@@ -25,4 +25,4 @@ private:
     void handle_mem_to_mem(Processor& processor) noexcept;
 };
 
-#endif // IMATH_H
+#endif // RMATH_H

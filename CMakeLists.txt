@@ -14,4 +14,4 @@ add_executable(
         Commands/RealArithmetic.cpp Commands/RealArithmetic.h
         Commands/Movements.cpp Commands/Movements.h
         Commands/IO.cpp Commands/IO.h
-        Commands/IMath.cpp Commands/IMath.h)
+        Commands/IMath.cpp Commands/IMath.h Commands/RMath.cpp Commands/RMath.h)

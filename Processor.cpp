@@ -4,6 +4,7 @@
 #include "Commands/Conversions.h"
 #include "Commands/IO.h"
 #include "Commands/IMath.h"
+#include "Commands/RMath.h"
 
 Processor::Processor() {
     commands[stop] = nullptr;
@@ -20,10 +21,10 @@ Processor::Processor() {
     commands[iOr]  = new class IMath([](int a, int b) { return (a | b); });
     commands[iNot] = new class IMath([](int a, int b) { return (~a); });
 
-    commands[rAdd] = new class rAdd();
-    commands[rSub] = new class rSub();
-    commands[rMul] = new class rMul();
-    commands[rDiv] = new class rDiv();
+    commands[rAdd] = new class RMath([](float a, float b) { return (a + b); });
+    commands[rSub] = new class RMath([](float a, float b) { return (a - b); });
+    commands[rMul] = new class RMath([](float a, float b) { return (a * b); });
+    commands[rDiv] = new class RMath([](float a, float b) { return (a / b); });
 
     commands[input] = new class Input();
     commands[output] = new class Output();
@@ -168,7 +169,7 @@ void Processor::set_real32(const float& real32, const uint8_t &_reg) {
 void Processor::verify_register(const uint8_t &_reg) {
     // - Если номер не в диапазоне [1,8] или нечетный,
     // - То кидаем исключение
-    if ((_reg < 1 || _reg > 8) || _reg % 2 == 1) {
+    if (_reg > 7 || _reg % 2 == 1) {
         throw invalid_register("Неправильный номер 32-битного регистра!");
     }
 }
