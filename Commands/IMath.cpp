@@ -21,21 +21,22 @@ void IMath::operator()(Processor &processor) {
 void IMath::set_flags(Processor &processor) noexcept {
     // - Узнаем размер операндов
     const uint8_t s = processor.cmd.s;
-    // - Узнаем индекс второго регистра, участвовавшего в команде,
-    // - так как результат лежит во втором регистре
-    const uint8_t r2_i = processor.cmd.r2;
+    // - Узнаем, где лежит ответ: в регистре или в памяти
+    const uint8_t dd = processor.cmd.dd;
     int32_t result;
-    // - Если размер операнда - 1 слово
-    if (s == 0)
+    // - Если в регистре
+    if (dd == 0 || dd == 2)
     {
-        // - Узнаем результат
-        result = get_int16(processor, r2_i);
+        const uint8_t r2_i = processor.cmd.r2;
+        result = (s == 0) ? get_int16(processor, r2_i)
+                          : get_int32(processor, r2_i);
     }
-    // - Иначе размер операнда - 2 слова
+    // - Если в памяти
     else
     {
-        // - Узнаем результат
-        result = get_int32(processor, r2_i);
+        const uint8_t o2_i = processor.cmd.o2;
+        result = (s == 0) ? processor.memory[o2_i].word.word16->int16
+                          : processor.memory[o2_i].word.word32.int32;
     }
     // - Устанавливаем флаги
     processor.psw.set_ZF(result);

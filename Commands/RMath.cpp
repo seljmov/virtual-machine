@@ -19,11 +19,21 @@ void RMath::operator()(Processor &processor) {
 }
 
 void RMath::set_flags(Processor &processor) noexcept {
-    // - Узнаем индекс второго регистра, участвовавшего в команде,
-    // - так как результат лежит во втором регистре
-    const uint8_t r2_i = processor.cmd.r2;
-    // - Узнаем результат
-    int32_t result = get_real32(processor, r2_i);
+    // - Узнаем, где лежит ответ: в регистре или в памяти
+    const uint8_t dd = processor.cmd.dd;
+    int32_t result;
+    // - Если в регистре
+    if (dd == 0 || dd == 2)
+    {
+        const uint8_t r2_i = processor.cmd.r2;
+        result = get_real32(processor, r2_i);
+    }
+    // - Если в памяти
+    else
+    {
+        const uint8_t o2_i = processor.cmd.o2;
+        result = processor.memory[o2_i].word.word32.real32;
+    }
     // - Устанавливаем флаги
     processor.psw.set_ZF(result);
     processor.psw.set_SF(result);
